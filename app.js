@@ -148,7 +148,7 @@ function updateStatusText() {
 
 function openBox(position, card) {
   // ล็อกเวลา
-  const targetTime = new Date('2026-06-09T14:05:00+07:00');
+  const targetTime = new Date('2026-06-09T18:40:00+07:00');
   const currentTime = new Date();
 
   if (currentTime < targetTime) {
