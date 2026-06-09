@@ -9,102 +9,53 @@
 </head>
 <body>
 
-  <!-- Welcome Popup -->
   <div id="welcomeModal" class="modal">
-
     <div class="modal-content welcome-content">
-
-      <button
-        id="closeWelcomeBtn"
-        class="close-btn">
-        ✕
-      </button>
-
-      <img
-        src="images/anniversary.png"
-        class="welcome-image"
-        alt="Happy Anniversary">
-
+      <button id="closeWelcomeBtn" class="close-btn">✕</button>
+      <img src="images/anniversary.png" class="welcome-image" alt="Happy Anniversary">
     </div>
-
   </div>
 
-  <!-- Main Content -->
   <main>
-
-    <h1 class="page-title">
-      Happy Anniversary ❤️
-    </h1>
-
-    <p class="subtitle">
-      Anniversary Lucky Box 🎀
-    </p>
-
+    <h1 class="page-title" id="pageTitle">Happy Anniversary ❤️</h1>
+    <p class="subtitle">Anniversary Lucky Box 🎀</p>
     <p id="remainingText"></p>
-
-    <div
-      id="boxContainer"
-      class="box-grid">
-    </div>
-
+    <div id="boxContainer" class="box-grid"></div>
   </main>
 
-  <!-- Reward Modal -->
-  <div
-    id="rewardModal"
-    class="modal hidden">
-
-    <div
-      class="modal-content reward-content">
-
-      <button
-        id="closeRewardBtn"
-        class="close-btn">
-        ✕
-      </button>
-
-      <img
-        id="rewardImage"
-        class="reward-image"
-        alt="Reward">
-
+  <div id="rewardModal" class="modal hidden">
+    <div class="modal-content reward-content">
+      <button id="closeRewardBtn" class="close-btn">✕</button>
+      <img id="rewardImage" class="reward-image" alt="Reward">
       <h2 id="rewardTitle"></h2>
-
       <p id="rewardDesc"></p>
-
     </div>
-
   </div>
 
   <div id="systemModal" class="modal hidden">
-
-  <div class="modal-content">
-
-    <button
-      id="closeSystemBtn"
-      class="close-btn">
-      ✕
-    </button>
-
-    <div
-      id="systemModalIcon"
-      class="modal-icon">
-      🎀
+    <div class="modal-content">
+      <button id="closeSystemBtn" class="close-btn">✕</button>
+      <div id="systemModalIcon" class="modal-icon">🎀</div>
+      <h2 id="systemModalTitle">Title</h2>
+      <p id="systemModalMessage">Message</p>
+      
+      <div id="secretInputArea" class="hidden" style="padding: 0 20px 20px 20px;">
+        <input 
+          type="text" 
+          id="secretKeywordInput" 
+          placeholder="พิมพ์รหัสลับตรงนี้..." 
+          style="width: 100%; padding: 10px; border: 2px solid #9c6ade; border-radius: 12px; font-family: 'Kanit'; font-size: 16px; text-align: center; outline: none; margin-bottom: 12px;"
+        >
+        <button 
+          id="submitSecretBtn" 
+          style="width: 100%; background: #9c6ade; color: white; border: none; padding: 10px; border-radius: 12px; font-family: 'Kanit'; font-size: 16px; cursor: pointer; font-weight: bold;"
+        >
+          ตกลง
+        </button>
+      </div>
     </div>
-
-    <h2 id="systemModalTitle">
-      Title
-    </h2>
-
-    <p id="systemModalMessage">
-      Message
-    </p>
-
   </div>
 
-</div>
-
   <script src="app.js"></script>
-
 </body>
 </html>
