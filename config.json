@@ -1,7 +1,7 @@
 {
-  "openedBoxes": [4],
+  "openedBoxes": [],
 
-  "maxOpenAllowed": 2,
+  "maxOpenAllowed": 1,
 
   "boxes": [
     {
