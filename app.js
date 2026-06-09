@@ -5,41 +5,109 @@ closeBtn.addEventListener('click', () => {
   modal.style.display = 'none';
 });
 
-const boxes = [
-  {
-    id: 1,
-    image: 'images/gift-box.png'
-  },
-  {
-    id: 2,
-    image: 'images/gift-box.png'
-  },
-  {
-    id: 3,
-    image: 'images/gift-box.png'
-  },
-  {
-    id: 4,
-    image: 'images/gift-box.png'
-  }
-];
+let config;
 
-const container = document.getElementById('boxContainer');
+async function loadConfig() {
 
-boxes.forEach(box => {
+  const response = await fetch('./config.json');
 
-  const card = document.createElement('div');
+  config = await response.json();
 
-  card.className = 'box-card';
+  renderBoxes();
 
-  card.innerHTML = `
-    <img src="${box.image}">
-  `;
+}
 
-  card.addEventListener('click', () => {
-    alert(`เปิดกล่อง ${box.id}`);
+function renderBoxes() {
+
+  const container = document.getElementById('boxContainer');
+
+  container.innerHTML = '';
+
+  config.boxes.forEach(box => {
+
+    const opened = config.openedBoxes.includes(box.id);
+
+    const image = opened
+      ? box.giftImage
+      : 'images/gift-box.png';
+
+    const card = document.createElement('div');
+
+    card.className = 'box-card';
+
+    card.innerHTML = `
+      <img src="${image}">
+    `;
+
+    card.addEventListener('click', () => {
+
+      if (opened) {
+
+        showReward(box);
+
+      } else {
+
+        openBox(box);
+
+      }
+
+    });
+
+    container.appendChild(card);
+
   });
 
-  container.appendChild(card);
+}
 
-});
+function openBox(box) {
+
+  if (
+    config.openedBoxes.length >=
+    config.maxOpenAllowed
+  ) {
+
+    alert('ยังไม่มีสิทธิ์เปิดเพิ่ม ❤️');
+
+    return;
+
+  }
+
+  config.openedBoxes.push(box.id);
+
+  renderBoxes();
+
+  showReward(box);
+
+}
+
+function showReward(box) {
+
+  document
+    .getElementById('rewardImage')
+    .src = box.giftImage;
+
+  document
+    .getElementById('rewardTitle')
+    .textContent = box.title;
+
+  document
+    .getElementById('rewardDesc')
+    .textContent = box.description;
+
+  document
+    .getElementById('rewardModal')
+    .classList.remove('hidden');
+
+}
+
+document
+  .getElementById('rewardCloseBtn')
+  .addEventListener('click', () => {
+
+    document
+      .getElementById('rewardModal')
+      .classList.add('hidden');
+
+  });
+
+loadConfig();
