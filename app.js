@@ -1,37 +1,116 @@
 let config = null;
 
+const STORAGE_KEY =
+  'anniversary-lucky-box';
+
+let openedMappings = [];
+
 // =====================
 // ELEMENTS
 // =====================
 
 const welcomeModal =
-  document.getElementById('welcomeModal');
+  document.getElementById(
+    'welcomeModal'
+  );
 
 const rewardModal =
-  document.getElementById('rewardModal');
+  document.getElementById(
+    'rewardModal'
+  );
 
 const boxContainer =
-  document.getElementById('boxContainer');
+  document.getElementById(
+    'boxContainer'
+  );
 
 // =====================
-// CLOSE BUTTONS
+// STORAGE
+// =====================
+
+function saveState() {
+
+  localStorage.setItem(
+    STORAGE_KEY,
+    JSON.stringify(
+      openedMappings
+    )
+  );
+
+}
+
+function loadState() {
+
+  const saved =
+    localStorage.getItem(
+      STORAGE_KEY
+    );
+
+  if (!saved) {
+    return;
+  }
+
+  try {
+
+    openedMappings =
+      JSON.parse(saved);
+
+  }
+  catch (error) {
+
+    console.error(
+      error
+    );
+
+    openedMappings = [];
+
+  }
+
+}
+
+function resetState() {
+
+  localStorage.removeItem(
+    STORAGE_KEY
+  );
+
+  location.reload();
+
+}
+
+// =====================
+// MODALS
 // =====================
 
 document
-  .getElementById('closeWelcomeBtn')
-  .addEventListener('click', () => {
+  .getElementById(
+    'closeWelcomeBtn'
+  )
+  .addEventListener(
+    'click',
+    () => {
 
-    welcomeModal.classList.add('hidden');
+      welcomeModal.classList.add(
+        'hidden'
+      );
 
-  });
+    }
+  );
 
 document
-  .getElementById('closeRewardBtn')
-  .addEventListener('click', () => {
+  .getElementById(
+    'closeRewardBtn'
+  )
+  .addEventListener(
+    'click',
+    () => {
 
-    rewardModal.classList.add('hidden');
+      rewardModal.classList.add(
+        'hidden'
+      );
 
-  });
+    }
+  );
 
 // =====================
 // LOAD CONFIG
@@ -42,10 +121,14 @@ async function loadConfig() {
   try {
 
     const response =
-      await fetch('./config.json');
+      await fetch(
+        './config.json'
+      );
 
     config =
       await response.json();
+
+    loadState();
 
     updateRemainingText();
 
@@ -54,10 +137,12 @@ async function loadConfig() {
   }
   catch (error) {
 
-    console.error(error);
+    console.error(
+      error
+    );
 
     alert(
-      'ไม่สามารถโหลด config.json ได้'
+      'โหลด config.json ไม่สำเร็จ'
     );
 
   }
@@ -65,19 +150,43 @@ async function loadConfig() {
 }
 
 // =====================
-// REMAINING TEXT
+// STATUS TEXT
 // =====================
 
 function updateRemainingText() {
 
-  const remain =
-    config.boxes.length -
-    config.openedBoxes.length;
-
   document
-    .getElementById('remainingText')
+    .getElementById(
+      'remainingText'
+    )
     .textContent =
-      `เหลือกล่องที่ยังไม่ถูกค้นพบ ${remain} กล่อง 🎁`;
+      `เปิดแล้ว ${openedMappings.length} / ${config.boxes.length} กล่อง 🎁`;
+
+}
+
+// =====================
+// HELPERS
+// =====================
+
+function findRewardById(
+  rewardId
+) {
+
+  return config.boxes.find(
+    box =>
+      box.id === rewardId
+  );
+
+}
+
+function findOpenedPosition(
+  position
+) {
+
+  return openedMappings.find(
+    item =>
+      item.position === position
+  );
 
 }
 
@@ -91,28 +200,42 @@ function renderBoxes() {
 
   config.boxes.forEach(box => {
 
-    const opened =
-      config.openedBoxes.includes(box.id);
+    const openedData =
+      findOpenedPosition(
+        box.id
+      );
+
+    let imageSrc =
+      'images/gift-box.png';
+
+    if (openedData) {
+
+      const reward =
+        findRewardById(
+          openedData.rewardId
+        );
+
+      imageSrc =
+        reward.giftImage;
+
+    }
 
     const card =
-      document.createElement('div');
+      document.createElement(
+        'div'
+      );
 
-    card.className = 'box-card';
-
-    card.dataset.id = box.id;
+    card.className =
+      'box-card';
 
     card.innerHTML = `
       <img
-        src="${
-          opened
-            ? box.giftImage
-            : 'images/gift-box.png'
-        }"
-        alt="${box.title}"
+        src="${imageSrc}"
+        alt="gift"
       >
 
       ${
-        opened
+        openedData
           ? '<div class="opened-badge">OPENED</div>'
           : ''
       }
@@ -122,16 +245,23 @@ function renderBoxes() {
       'click',
       () => {
 
-        if (opened) {
+        if (openedData) {
 
-          showReward(box);
+          const reward =
+            findRewardById(
+              openedData.rewardId
+            );
+
+          showReward(
+            reward
+          );
 
         }
         else {
 
-          playOpenAnimation(
-            card,
-            box
+          openBox(
+            box.id,
+            card
           );
 
         }
@@ -139,20 +269,48 @@ function renderBoxes() {
       }
     );
 
-    boxContainer.appendChild(card);
+    boxContainer.appendChild(
+      card
+    );
 
   });
 
 }
 
 // =====================
-// OPEN ANIMATION
+// OPEN BOX
 // =====================
 
-function playOpenAnimation(
-  card,
-  box
+function openBox(
+  position,
+  card
 ) {
+
+  if (
+    openedMappings.length >=
+    config.maxOpenAllowed
+  ) {
+
+    alert(
+      'ยังไม่สามารถเปิดกล่องเพิ่มได้ 🎀'
+    );
+
+    return;
+
+  }
+
+  const rewardIndex =
+    openedMappings.length;
+
+  const rewardId =
+    config.rewardSequence[
+      rewardIndex
+    ];
+
+  const reward =
+    findRewardById(
+      rewardId
+    );
 
   card.classList.add(
     'box-opening'
@@ -162,11 +320,20 @@ function playOpenAnimation(
 
   setTimeout(() => {
 
-    card.classList.remove(
-      'box-opening'
-    );
+    openedMappings.push({
+      position: position,
+      rewardId: rewardId
+    });
 
-    showReward(box);
+    saveState();
+
+    renderBoxes();
+
+    updateRemainingText();
+
+    showReward(
+      reward
+    );
 
   }, 800);
 
@@ -176,22 +343,30 @@ function playOpenAnimation(
 // REWARD MODAL
 // =====================
 
-function showReward(box) {
+function showReward(
+  reward
+) {
 
   document
-    .getElementById('rewardImage')
+    .getElementById(
+      'rewardImage'
+    )
     .src =
-    box.giftImage;
+      reward.giftImage;
 
   document
-    .getElementById('rewardTitle')
+    .getElementById(
+      'rewardTitle'
+    )
     .textContent =
-    box.title;
+      reward.title;
 
   document
-    .getElementById('rewardDesc')
+    .getElementById(
+      'rewardDesc'
+    )
     .textContent =
-    box.description;
+      reward.description;
 
   rewardModal.classList.remove(
     'hidden'
@@ -212,12 +387,15 @@ function createSparkles() {
   ) {
 
     const sparkle =
-      document.createElement('div');
+      document.createElement(
+        'div'
+      );
 
     sparkle.className =
       'sparkle';
 
-    sparkle.innerHTML = '✨';
+    sparkle.innerHTML =
+      '✨';
 
     sparkle.style.left =
       (
@@ -237,15 +415,25 @@ function createSparkles() {
       sparkle
     );
 
-    setTimeout(() => {
+    setTimeout(
+      () => {
 
-      sparkle.remove();
+        sparkle.remove();
 
-    }, 1000);
+      },
+      1000
+    );
 
   }
 
 }
+
+// =====================
+// DEBUG
+// =====================
+
+window.resetLuckyBox =
+  resetState;
 
 // =====================
 // START
