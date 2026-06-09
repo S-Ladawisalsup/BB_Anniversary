@@ -1,0 +1,31 @@
+{
+  "openedBoxes": [],
+  "maxOpenAllowed": 1,
+
+  "boxes": [
+    {
+      "id": 1,
+      "giftImage": "images/reward1.png",
+      "title": "Coupon A",
+      "description": "ข้อความพิเศษ A"
+    },
+    {
+      "id": 2,
+      "giftImage": "images/reward2.png",
+      "title": "Coupon B",
+      "description": "ข้อความพิเศษ B"
+    },
+    {
+      "id": 3,
+      "giftImage": "images/reward3.png",
+      "title": "Coupon C",
+      "description": "ข้อความพิเศษ C"
+    },
+    {
+      "id": 4,
+      "giftImage": "images/reward4.png",
+      "title": "Coupon D",
+      "description": "ข้อความพิเศษ D"
+    }
+  ]
+}
