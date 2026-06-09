@@ -18,6 +18,11 @@ const rewardModal =
     'rewardModal'
   );
 
+const systemModal =
+  document.getElementById(
+    'systemModal'
+  );
+
 const boxContainer =
   document.getElementById(
     'boxContainer'
@@ -80,6 +85,10 @@ function resetState() {
 function exportLuckyBox() {
 
   console.log(
+    'Copy this to config.json'
+  );
+
+  console.log(
     JSON.stringify(
       openedMappings,
       null,
@@ -90,7 +99,7 @@ function exportLuckyBox() {
 }
 
 // ======================
-// MODAL EVENTS
+// MODALS
 // ======================
 
 document
@@ -123,6 +132,86 @@ document
     }
   );
 
+document
+  .getElementById(
+    'closeSystemBtn'
+  )
+  .addEventListener(
+    'click',
+    () => {
+
+      systemModal.classList.add(
+        'hidden'
+      );
+
+    }
+  );
+
+// ======================
+// SYSTEM MODAL
+// ======================
+
+function showModal({
+
+  type = 'info',
+
+  icon = null,
+
+  title = 'Notice',
+
+  message = ''
+
+}) {
+
+  const iconMap = {
+
+    success: '🎉',
+
+    warning: '⚠️',
+
+    error: '❌',
+
+    lock: '🔒',
+
+    gift: '🎁',
+
+    love: '💜',
+
+    secret: '🗝️',
+
+    info: '🎀'
+
+  };
+
+  document
+    .getElementById(
+      'systemModalIcon'
+    )
+    .textContent =
+      icon ||
+      iconMap[type] ||
+      '🎀';
+
+  document
+    .getElementById(
+      'systemModalTitle'
+    )
+    .textContent =
+      title;
+
+  document
+    .getElementById(
+      'systemModalMessage'
+    )
+    .textContent =
+      message;
+
+  systemModal.classList.remove(
+    'hidden'
+  );
+
+}
+
 // ======================
 // LOAD CONFIG
 // ======================
@@ -139,13 +228,12 @@ async function loadConfig() {
     config =
       await response.json();
 
-    // ใช้ state จาก config ก่อน
+    // Default state from config
 
     openedMappings =
       config.openedMappings || [];
 
-    // ถ้ามี localStorage
-    // ให้ localStorage มี priority สูงกว่า
+    // Local storage overrides config
 
     loadLocalState();
 
@@ -158,9 +246,17 @@ async function loadConfig() {
 
     console.error(error);
 
-    alert(
-      'โหลด config.json ไม่สำเร็จ'
-    );
+    showModal({
+
+      type: 'error',
+
+      title:
+        'โหลดข้อมูลไม่สำเร็จ',
+
+      message:
+        'ไม่สามารถโหลด config.json ได้'
+
+    });
 
   }
 
@@ -172,16 +268,21 @@ async function loadConfig() {
 
 function updateStatusText() {
 
-  const remain =
-    config.boxes.length -
+  const total =
+    config.boxes.length;
+
+  const opened =
     openedMappings.length;
+
+  const remain =
+    total - opened;
 
   document
     .getElementById(
       'remainingText'
     )
     .textContent =
-      `เปิดแล้ว ${openedMappings.length}/${config.boxes.length} กล่อง • เหลือ ${remain} กล่อง 🎁`;
+      `เปิดแล้ว ${opened}/${total} กล่อง • เหลือ ${remain} กล่อง 🎁`;
 
 }
 
@@ -254,16 +355,19 @@ function renderBoxes() {
       card.className =
         'box-card';
 
-      card.innerHTML =
-        `
+      card.innerHTML = `
         <img
           src="${imageSrc}"
-          alt="gift"
-        >
+          alt="gift">
 
         ${
           openedData
-            ? '<div class="opened-badge">OPENED</div>'
+            ? `
+              <div
+                class="opened-badge">
+                OPENED
+              </div>
+            `
             : ''
         }
       `;
@@ -315,9 +419,17 @@ function openBox(
     config.maxOpenAllowed
   ) {
 
-    alert(
-      'ยังไม่สามารถเปิดกล่องเพิ่มได้ 🎀'
-    );
+    showModal({
+
+      type: 'lock',
+
+      title:
+        'ยังเปิดไม่ได้',
+
+      message:
+        'กล่องถัดไปยังไม่ถูกปลดล็อก โปรดกลับมาอีกครั้งในภายหลัง 💜'
+
+    });
 
     return;
 
@@ -346,10 +458,13 @@ function openBox(
     () => {
 
       openedMappings.push({
+
         position:
           position,
+
         rewardId:
           rewardId
+
       });
 
       saveState();
@@ -361,6 +476,33 @@ function openBox(
       showReward(
         reward
       );
+
+      if (
+        openedMappings.length ===
+        config.boxes.length
+      ) {
+
+        setTimeout(
+          () => {
+
+            showModal({
+
+              type:
+                'success',
+
+              title:
+                'Congratulations!',
+
+              message:
+                'คุณค้นพบของขวัญทั้งหมดแล้ว 🎉'
+
+            });
+
+          },
+          1000
+        );
+
+      }
 
     },
     800
@@ -404,7 +546,7 @@ function showReward(
 }
 
 // ======================
-// SPARKLE EFFECT
+// SPARKLES
 // ======================
 
 function createSparkles() {
@@ -466,6 +608,9 @@ window.resetLuckyBox =
 
 window.exportLuckyBox =
   exportLuckyBox;
+
+window.showModal =
+  showModal;
 
 // ======================
 // START
