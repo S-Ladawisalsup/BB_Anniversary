@@ -1,67 +1,81 @@
 <!DOCTYPE html>
-<html>
+
+<html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Gasha Box</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Happy Anniversary ❤️</title>
 
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-  <!-- Advertisement Popup -->
-  <div id="adModal" class="modal">
+  <!-- Welcome Popup -->
 
-    <div class="modal-content">
+  <div id="welcomeModal" class="modal">
 
-      <button id="closeBtn" class="close-btn">
-        ✕
-      </button>
+```
+<div class="modal-content welcome-content">
 
-      <img
-        src="images/anniversary.png"
-        alt="Happy Anniversary"
-        class="ad-image"
-      >
+  <button id="closeWelcomeBtn" class="close-btn">
+    ✕
+  </button>
 
-    </div>
+  <img
+    src="images/anniversary.png"
+    class="welcome-image"
+    alt="Anniversary"
+  >
+
+</div>
+```
 
   </div>
 
-  <h1 id="mainTitle">
-    Happy Anniversary ❤️
-  </h1>
+  <!-- Main Content -->
 
-  <h3>
-    เลือกกล่องของขวัญ 🎁
-  </h3>
-  
-  <div id="boxContainer" class="box-grid">
-  
-  </div>
-  
-  <p id="statusText">
-    เหลือสิทธิ์เปิดอีก 1 ครั้ง
-  </p>
+  <main>
 
-  <div id="sparkles"></div>
+```
+<h1 class="page-title">
+  Happy Anniversary ❤️
+</h1>
+
+<p class="subtitle">
+  Anniversary Lucky Box 🎀
+</p>
+
+<p id="remainingText"></p>
+
+<div id="boxContainer" class="box-grid"></div>
+```
+
+  </main>
+
+  <!-- Reward Modal -->
 
   <div id="rewardModal" class="modal hidden">
 
-  <div class="modal-content">
+```
+<div class="modal-content reward-content">
 
-    <button id="rewardCloseBtn" class="close-btn">
-      ✕
-    </button>
+  <button id="closeRewardBtn" class="close-btn">
+    ✕
+  </button>
 
-    <img id="rewardImage" class="ad-image">
+  <img
+    id="rewardImage"
+    class="reward-image"
+  >
 
-    <h2 id="rewardTitle"></h2>
+  <h2 id="rewardTitle"></h2>
 
-    <p id="rewardDesc"></p>
-
-  </div>
+  <p id="rewardDesc"></p>
 
 </div>
+```
+
+  </div>
 
   <script src="app.js"></script>
 
