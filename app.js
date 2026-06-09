@@ -7,7 +7,7 @@ let openedMappings = [];
 let usedKeywords = []; // เก็บ keyword ที่ผู้ใช้พิมพ์ถูกและใช้ไปแล้ว
 
 // คำลับที่คุณต้องการให้เปิดกล่องเพิ่ม (เปลี่ยนข้อความในนี้ได้เลยครับ)
-const VALID_KEYWORDS = ['love1', 'love2', 'love3']; 
+const VALID_KEYWORDS = ['swim', 'love2', 'love3']; 
 
 // ======================
 // ELEMENTS
