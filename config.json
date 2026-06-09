@@ -1,31 +1,32 @@
 {
-  "openedBoxes": [],
-  "maxOpenAllowed": 1,
+  "openedBoxes": [4],
+
+  "maxOpenAllowed": 2,
 
   "boxes": [
     {
       "id": 1,
       "giftImage": "images/reward1.png",
-      "title": "Coupon A",
-      "description": "ข้อความพิเศษ A"
+      "title": "OREO BTS",
+      "description": "ขนมโอรีโอ BTS"
     },
     {
       "id": 2,
       "giftImage": "images/reward2.png",
-      "title": "Coupon B",
-      "description": "ข้อความพิเศษ B"
+      "title": "BT21 Tumbler",
+      "description": "แก้วน้ำ BT21"
     },
     {
       "id": 3,
       "giftImage": "images/reward3.png",
-      "title": "Coupon C",
-      "description": "ข้อความพิเศษ C"
+      "title": "Jin Figure",
+      "description": "ตุ๊กตา BTS"
     },
     {
       "id": 4,
       "giftImage": "images/reward4.png",
-      "title": "Coupon D",
-      "description": "ข้อความพิเศษ D"
+      "title": "BT21 Camera",
+      "description": "กล้อง BT21"
     }
   ]
 }
