@@ -1,113 +1,254 @@
-const modal = document.getElementById('adModal');
-const closeBtn = document.getElementById('closeBtn');
+let config = null;
 
-closeBtn.addEventListener('click', () => {
-  modal.style.display = 'none';
-});
+// =====================
+// ELEMENTS
+// =====================
 
-let config;
+const welcomeModal =
+  document.getElementById('welcomeModal');
+
+const rewardModal =
+  document.getElementById('rewardModal');
+
+const boxContainer =
+  document.getElementById('boxContainer');
+
+// =====================
+// CLOSE BUTTONS
+// =====================
+
+document
+  .getElementById('closeWelcomeBtn')
+  .addEventListener('click', () => {
+
+    welcomeModal.classList.add('hidden');
+
+  });
+
+document
+  .getElementById('closeRewardBtn')
+  .addEventListener('click', () => {
+
+    rewardModal.classList.add('hidden');
+
+  });
+
+// =====================
+// LOAD CONFIG
+// =====================
 
 async function loadConfig() {
 
-  const response = await fetch('./config.json');
+  try {
 
-  config = await response.json();
+    const response =
+      await fetch('./config.json');
 
-  renderBoxes();
+    config =
+      await response.json();
+
+    updateRemainingText();
+
+    renderBoxes();
+
+  }
+  catch (error) {
+
+    console.error(error);
+
+    alert(
+      'ไม่สามารถโหลด config.json ได้'
+    );
+
+  }
 
 }
 
+// =====================
+// REMAINING TEXT
+// =====================
+
+function updateRemainingText() {
+
+  const remain =
+    config.boxes.length -
+    config.openedBoxes.length;
+
+  document
+    .getElementById('remainingText')
+    .textContent =
+      `เหลือกล่องที่ยังไม่ถูกค้นพบ ${remain} กล่อง 🎁`;
+
+}
+
+// =====================
+// RENDER BOXES
+// =====================
+
 function renderBoxes() {
 
-  const container = document.getElementById('boxContainer');
-
-  container.innerHTML = '';
+  boxContainer.innerHTML = '';
 
   config.boxes.forEach(box => {
 
-    const opened = config.openedBoxes.includes(box.id);
+    const opened =
+      config.openedBoxes.includes(box.id);
 
-    const image = opened
-      ? box.giftImage
-      : 'images/gift-box.png';
-
-    const card = document.createElement('div');
+    const card =
+      document.createElement('div');
 
     card.className = 'box-card';
 
+    card.dataset.id = box.id;
+
     card.innerHTML = `
-      <img src="${image}">
+      <img
+        src="${
+          opened
+            ? box.giftImage
+            : 'images/gift-box.png'
+        }"
+        alt="${box.title}"
+      >
+
+      ${
+        opened
+          ? '<div class="opened-badge">OPENED</div>'
+          : ''
+      }
     `;
 
-    card.addEventListener('click', () => {
+    card.addEventListener(
+      'click',
+      () => {
 
-      if (opened) {
+        if (opened) {
 
-        showReward(box);
+          showReward(box);
 
-      } else {
+        }
+        else {
 
-        openBox(box);
+          playOpenAnimation(
+            card,
+            box
+          );
+
+        }
 
       }
+    );
 
-    });
-
-    container.appendChild(card);
+    boxContainer.appendChild(card);
 
   });
 
 }
 
-function openBox(box) {
+// =====================
+// OPEN ANIMATION
+// =====================
 
-  if (
-    config.openedBoxes.length >=
-    config.maxOpenAllowed
-  ) {
+function playOpenAnimation(
+  card,
+  box
+) {
 
-    alert('ยังไม่มีสิทธิ์เปิดเพิ่ม ❤️');
+  card.classList.add(
+    'box-opening'
+  );
 
-    return;
+  createSparkles();
 
-  }
+  setTimeout(() => {
 
-  config.openedBoxes.push(box.id);
+    card.classList.remove(
+      'box-opening'
+    );
 
-  renderBoxes();
+    showReward(box);
 
-  showReward(box);
+  }, 800);
 
 }
+
+// =====================
+// REWARD MODAL
+// =====================
 
 function showReward(box) {
 
   document
     .getElementById('rewardImage')
-    .src = box.giftImage;
+    .src =
+    box.giftImage;
 
   document
     .getElementById('rewardTitle')
-    .textContent = box.title;
+    .textContent =
+    box.title;
 
   document
     .getElementById('rewardDesc')
-    .textContent = box.description;
+    .textContent =
+    box.description;
 
-  document
-    .getElementById('rewardModal')
-    .classList.remove('hidden');
+  rewardModal.classList.remove(
+    'hidden'
+  );
 
 }
 
-document
-  .getElementById('rewardCloseBtn')
-  .addEventListener('click', () => {
+// =====================
+// SPARKLES
+// =====================
 
-    document
-      .getElementById('rewardModal')
-      .classList.add('hidden');
+function createSparkles() {
 
-  });
+  for (
+    let i = 0;
+    i < 12;
+    i++
+  ) {
+
+    const sparkle =
+      document.createElement('div');
+
+    sparkle.className =
+      'sparkle';
+
+    sparkle.innerHTML = '✨';
+
+    sparkle.style.left =
+      (
+        window.innerWidth / 2 -
+        60 +
+        Math.random() * 120
+      ) + 'px';
+
+    sparkle.style.top =
+      (
+        window.innerHeight / 2 -
+        60 +
+        Math.random() * 120
+      ) + 'px';
+
+    document.body.appendChild(
+      sparkle
+    );
+
+    setTimeout(() => {
+
+      sparkle.remove();
+
+    }, 1000);
+
+  }
+
+}
+
+// =====================
+// START
+// =====================
 
 loadConfig();
