@@ -7,7 +7,7 @@ let openedMappings = [];
 let usedKeywords = []; 
 
 // ใส่คำลับที่ต้องการได้ที่นี่
-const VALID_KEYWORDS = ['love1', 'love2', 'love3']; 
+const VALID_KEYWORDS = ['swim', 'kisskiss', 'lottery']; 
 
 // ======================
 // ELEMENTS
@@ -138,7 +138,7 @@ function updateStatusText() {
   } else if (availableToOpen > 0) {
     document.getElementById('remainingText').textContent = `เปิดแล้ว ${opened}/${total} กล่อง • เปิดได้อีก ${availableToOpen} ครั้ง 🎁`;
   } else {
-    document.getElementById('remainingText').textContent = `เปิดแล้ว ${opened}/${total} กล่อง • สิทธิ์หมดแล้ว รอปลดล็อกเพิ่ม 🔒`;
+    document.getElementById('remainingText').textContent = `เปิดแล้ว ${opened}/${total} กล่อง • สิทธิ์หมดแล้ว 🔒`;
   }
 }
 
@@ -148,14 +148,14 @@ function updateStatusText() {
 
 function openBox(position, card) {
   // ล็อกเวลา
-  const targetTime = new Date('2026-06-09T13:50:00+07:00');
+  const targetTime = new Date('2026-06-09T14:05:00+07:00');
   const currentTime = new Date();
 
   if (currentTime < targetTime) {
     showModal({
       type: 'lock',
       title: 'ยังไม่ถึงเวลาเปิด',
-      message: 'กล่องนำโชคยังไม่พร้อมทำงาน โปรดกลับมาใหม่อีกครั้งหลังเวลา 18.40 น. นะ! ⏳💜'
+      message: 'กล่องนำโชคยังไม่พร้อมทำงาน ไว้มาเปิดตอนเย็นบนรถนะจ๊ะ! ⏳💜'
     });
     return;
   }
@@ -164,7 +164,7 @@ function openBox(position, card) {
     showModal({
       type: 'lock',
       title: 'ยังเปิดไม่ได้',
-      message: 'สิทธิ์ของคุณหมดแล้ว ลองมองหา "รหัสลับ" เพื่อปลดล็อกสิทธิ์เพิ่มอีก 1 ครั้ง 💜'
+      message: 'สิทธิ์ของคุณหมดแล้ว ลองอ้อนขอแฟนคุณ เพื่อปลดล็อกสิทธิ์เพิ่มอีก 1 ครั้ง 💜'
     });
     return;
   }
