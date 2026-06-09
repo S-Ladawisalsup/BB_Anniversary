@@ -1,45 +1,115 @@
+* {
+  box-sizing: border-box;
+}
+
 body {
   margin: 0;
-  font-family: sans-serif;
-  background: #fff5f7;
+  font-family: "Segoe UI", sans-serif;
+  background: #f8f5ff;
+  color: #555;
   text-align: center;
 }
 
-#mainTitle {
-  margin-top: 40px;
+main {
+  padding: 20px;
 }
 
-/* Modal */
+.page-title {
+  color: #9c6ade;
+  margin-bottom: 5px;
+  font-size: 2rem;
+}
+
+.subtitle {
+  color: #888;
+  margin-bottom: 25px;
+}
+
+#remainingText {
+  margin-bottom: 20px;
+  color: #7b5ec7;
+  font-weight: 600;
+}
+
+/* =====================
+   BOX GRID
+===================== */
+
+.box-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+.box-card {
+  position: relative;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.box-card:hover {
+  transform: scale(1.04);
+}
+
+.box-card img {
+  width: 100%;
+  display: block;
+  border-radius: 18px;
+}
+
+.opened-badge {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+
+  background: #ff8fb1;
+  color: white;
+
+  padding: 4px 10px;
+
+  border-radius: 999px;
+
+  font-size: 11px;
+  font-weight: bold;
+}
+
+/* =====================
+   MODAL
+===================== */
 
 .modal {
   position: fixed;
   inset: 0;
 
-  background: rgba(0,0,0,.6);
+  background: rgba(0, 0, 0, 0.55);
 
   display: flex;
   justify-content: center;
   align-items: center;
 
-  z-index: 9999;
+  z-index: 999;
+}
+
+.hidden {
+  display: none !important;
 }
 
 .modal-content {
   position: relative;
 
-  width: 90%;
+  width: 92%;
   max-width: 420px;
 
-  border-radius: 20px;
+  background: white;
+
+  border-radius: 24px;
 
   overflow: hidden;
 
-  animation: popup .3s ease;
-}
-
-.ad-image {
-  width: 100%;
-  display: block;
+  animation: popup 0.3s ease;
 }
 
 .close-btn {
@@ -57,131 +127,104 @@ body {
   cursor: pointer;
 
   background: white;
+
   font-size: 18px;
   font-weight: bold;
+
+  z-index: 10;
 }
 
-@keyframes popup {
-  from {
-    transform: scale(.8);
-    opacity: 0;
-  }
+/* =====================
+   WELCOME POPUP
+===================== */
 
-  to {
-    transform: scale(1);
-    opacity: 1;
-  }
-}
-
-.box-grid {
-  width: 90%;
-  max-width: 500px;
-
-  margin: 20px auto;
-
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-
-  gap: 16px;
-}
-
-.box-card {
-  cursor: pointer;
-
-  transition: .25s;
-
-  border-radius: 20px;
-
-  overflow: hidden;
-}
-
-.box-card:hover {
-  transform: scale(1.05);
-}
-
-.box-card img {
+.welcome-image {
   width: 100%;
   display: block;
 }
 
-#statusText {
-  margin-top: 20px;
+/* =====================
+   REWARD POPUP
+===================== */
 
+.reward-content {
+  padding: 18px;
+}
+
+.reward-image {
+  width: 100%;
+  border-radius: 18px;
+}
+
+#rewardTitle {
+  color: #9c6ade;
+  margin-top: 15px;
+}
+
+#rewardDesc {
   color: #666;
-
-  font-size: 14px;
+  line-height: 1.5;
 }
 
-.hidden {
-  display: none !important;
-}
-
-.box-card {
-  position: relative;
-
-  cursor: pointer;
-
-  transition: 0.2s;
-
-  border-radius: 20px;
-
-  overflow: hidden;
-}
-
-.box-card:active {
-  transform: scale(0.95);
-}
-
-.box-card img {
-  width: 100%;
-  display: block;
-}
-
-/* animation ตอนเปิด */
+/* =====================
+   BOX OPENING ANIMATION
+===================== */
 
 .box-opening {
   animation: openBox 0.8s ease;
 }
 
 @keyframes openBox {
-
   0% {
-    transform: scale(1) rotate(0deg);
+    transform: scale(1);
   }
 
-  20% {
-    transform: scale(1.1) rotate(-8deg);
+  25% {
+    transform: scale(1.15) rotate(-8deg);
   }
 
-  40% {
+  50% {
     transform: scale(1.15) rotate(8deg);
-  }
-
-  70% {
-    transform: scale(0.9);
   }
 
   100% {
     transform: scale(1);
   }
-
 }
 
+/* =====================
+   POPUP ANIMATION
+===================== */
+
+@keyframes popup {
+  from {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* =====================
+   SPARKLES
+===================== */
+
 .sparkle {
-
   position: fixed;
-
-  pointer-events: none;
 
   font-size: 28px;
 
-  animation: sparkleAnim 1s ease forwards;
+  pointer-events: none;
 
-  z-index: 99999;
+  z-index: 9999;
+
+  animation: sparkle 1s ease forwards;
 }
 
-@keyframes sparkleAnim {
-
+@keyframes sparkle {
   0% {
     opacity: 0;
     transform: scale(0);
@@ -189,61 +232,27 @@ body {
 
   30% {
     opacity: 1;
-    transform: scale(1.4);
+    transform: scale(1.3);
   }
 
   100% {
     opacity: 0;
     transform: translateY(-60px);
   }
-
 }
 
-.modal-content {
+/* =====================
+   MOBILE
+===================== */
 
-  background: white;
+@media (max-width: 480px) {
 
-  border-radius: 24px;
-
-  padding: 20px;
-
-  box-shadow:
-    0 10px 30px rgba(0,0,0,.2);
-
-  animation:
-    rewardPopup .35s ease;
-}
-
-#rewardTitle {
-
-  color: #a855f7;
-
-  margin-top: 12px;
-}
-
-#rewardDesc {
-
-  color: #666;
-  line-height: 1.5;
-}
-
-#rewardImage {
-
-  width: 100%;
-
-  border-radius: 16px;
-}
-
-@keyframes rewardPopup {
-
-  from {
-    opacity: 0;
-    transform: scale(.7);
+  .page-title {
+    font-size: 1.7rem;
   }
 
-  to {
-    opacity: 1;
-    transform: scale(1);
+  .box-grid {
+    gap: 12px;
   }
 
 }
