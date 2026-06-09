@@ -132,12 +132,15 @@ main {
 ===================== */
 
 .reward-content {
-  padding: 18px;
+  padding: 0;
+  padding-bottom: 18px;
 }
 
 .reward-image {
   width: 100%;
   border-radius: 18px;
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
 }
 
 #rewardTitle {
