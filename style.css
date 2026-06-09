@@ -115,3 +115,54 @@ body {
 .hidden {
   display: none !important;
 }
+
+.box-card {
+  position: relative;
+
+  cursor: pointer;
+
+  transition: 0.2s;
+
+  border-radius: 20px;
+
+  overflow: hidden;
+}
+
+.box-card:active {
+  transform: scale(0.95);
+}
+
+.box-card img {
+  width: 100%;
+  display: block;
+}
+
+/* animation ตอนเปิด */
+
+.box-opening {
+  animation: openBox 0.8s ease;
+}
+
+@keyframes openBox {
+
+  0% {
+    transform: scale(1) rotate(0deg);
+  }
+
+  20% {
+    transform: scale(1.1) rotate(-8deg);
+  }
+
+  40% {
+    transform: scale(1.15) rotate(8deg);
+  }
+
+  70% {
+    transform: scale(0.9);
+  }
+
+  100% {
+    transform: scale(1);
+  }
+
+}
