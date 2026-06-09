@@ -72,3 +72,42 @@ body {
     opacity: 1;
   }
 }
+
+.box-grid {
+  width: 90%;
+  max-width: 500px;
+
+  margin: 20px auto;
+
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+
+  gap: 16px;
+}
+
+.box-card {
+  cursor: pointer;
+
+  transition: .25s;
+
+  border-radius: 20px;
+
+  overflow: hidden;
+}
+
+.box-card:hover {
+  transform: scale(1.05);
+}
+
+.box-card img {
+  width: 100%;
+  display: block;
+}
+
+#statusText {
+  margin-top: 20px;
+
+  color: #666;
+
+  font-size: 14px;
+}
