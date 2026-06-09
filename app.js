@@ -1,13 +1,12 @@
 let config = null;
 
-const STORAGE_KEY =
-  'anniversary-lucky-box';
+const STORAGE_KEY = 'anniversary-lucky-box';
 
 let openedMappings = [];
 
-// =====================
+// ======================
 // ELEMENTS
-// =====================
+// ======================
 
 const welcomeModal =
   document.getElementById(
@@ -24,9 +23,9 @@ const boxContainer =
     'boxContainer'
   );
 
-// =====================
+// ======================
 // STORAGE
-// =====================
+// ======================
 
 function saveState() {
 
@@ -39,7 +38,7 @@ function saveState() {
 
 }
 
-function loadState() {
+function loadLocalState() {
 
   const saved =
     localStorage.getItem(
@@ -47,7 +46,7 @@ function loadState() {
     );
 
   if (!saved) {
-    return;
+    return false;
   }
 
   try {
@@ -55,14 +54,14 @@ function loadState() {
     openedMappings =
       JSON.parse(saved);
 
+    return true;
+
   }
   catch (error) {
 
-    console.error(
-      error
-    );
+    console.error(error);
 
-    openedMappings = [];
+    return false;
 
   }
 
@@ -78,9 +77,21 @@ function resetState() {
 
 }
 
-// =====================
-// MODALS
-// =====================
+function exportLuckyBox() {
+
+  console.log(
+    JSON.stringify(
+      openedMappings,
+      null,
+      2
+    )
+  );
+
+}
+
+// ======================
+// MODAL EVENTS
+// ======================
 
 document
   .getElementById(
@@ -112,9 +123,9 @@ document
     }
   );
 
-// =====================
+// ======================
 // LOAD CONFIG
-// =====================
+// ======================
 
 async function loadConfig() {
 
@@ -128,18 +139,24 @@ async function loadConfig() {
     config =
       await response.json();
 
-    loadState();
+    // ใช้ state จาก config ก่อน
 
-    updateRemainingText();
+    openedMappings =
+      config.openedMappings || [];
+
+    // ถ้ามี localStorage
+    // ให้ localStorage มี priority สูงกว่า
+
+    loadLocalState();
+
+    updateStatusText();
 
     renderBoxes();
 
   }
   catch (error) {
 
-    console.error(
-      error
-    );
+    console.error(error);
 
     alert(
       'โหลด config.json ไม่สำเร็จ'
@@ -149,24 +166,28 @@ async function loadConfig() {
 
 }
 
-// =====================
-// STATUS TEXT
-// =====================
+// ======================
+// STATUS
+// ======================
 
-function updateRemainingText() {
+function updateStatusText() {
+
+  const remain =
+    config.boxes.length -
+    openedMappings.length;
 
   document
     .getElementById(
       'remainingText'
     )
     .textContent =
-      `เปิดแล้ว ${openedMappings.length} / ${config.boxes.length} กล่อง 🎁`;
+      `เปิดแล้ว ${openedMappings.length}/${config.boxes.length} กล่อง • เหลือ ${remain} กล่อง 🎁`;
 
 }
 
-// =====================
+// ======================
 // HELPERS
-// =====================
+// ======================
 
 function findRewardById(
   rewardId
@@ -190,96 +211,99 @@ function findOpenedPosition(
 
 }
 
-// =====================
+// ======================
 // RENDER BOXES
-// =====================
+// ======================
 
 function renderBoxes() {
 
-  boxContainer.innerHTML = '';
+  boxContainer.innerHTML =
+    '';
 
-  config.boxes.forEach(box => {
+  config.boxes.forEach(
+    positionBox => {
 
-    const openedData =
-      findOpenedPosition(
-        box.id
-      );
-
-    let imageSrc =
-      'images/gift-box.png';
-
-    if (openedData) {
-
-      const reward =
-        findRewardById(
-          openedData.rewardId
+      const openedData =
+        findOpenedPosition(
+          positionBox.id
         );
 
-      imageSrc =
-        reward.giftImage;
+      let imageSrc =
+        'images/gift-box.png';
 
-    }
+      let rewardData =
+        null;
 
-    const card =
-      document.createElement(
-        'div'
-      );
+      if (openedData) {
 
-    card.className =
-      'box-card';
-
-    card.innerHTML = `
-      <img
-        src="${imageSrc}"
-        alt="gift"
-      >
-
-      ${
-        openedData
-          ? '<div class="opened-badge">OPENED</div>'
-          : ''
-      }
-    `;
-
-    card.addEventListener(
-      'click',
-      () => {
-
-        if (openedData) {
-
-          const reward =
-            findRewardById(
-              openedData.rewardId
-            );
-
-          showReward(
-            reward
+        rewardData =
+          findRewardById(
+            openedData.rewardId
           );
 
+        imageSrc =
+          rewardData.giftImage;
+
+      }
+
+      const card =
+        document.createElement(
+          'div'
+        );
+
+      card.className =
+        'box-card';
+
+      card.innerHTML =
+        `
+        <img
+          src="${imageSrc}"
+          alt="gift"
+        >
+
+        ${
+          openedData
+            ? '<div class="opened-badge">OPENED</div>'
+            : ''
         }
-        else {
+      `;
+
+      card.addEventListener(
+        'click',
+        () => {
+
+          if (
+            openedData
+          ) {
+
+            showReward(
+              rewardData
+            );
+
+            return;
+
+          }
 
           openBox(
-            box.id,
+            positionBox.id,
             card
           );
 
         }
+      );
 
-      }
-    );
+      boxContainer.appendChild(
+        card
+      );
 
-    boxContainer.appendChild(
-      card
-    );
-
-  });
+    }
+  );
 
 }
 
-// =====================
+// ======================
 // OPEN BOX
-// =====================
+// ======================
 
 function openBox(
   position,
@@ -299,12 +323,12 @@ function openBox(
 
   }
 
-  const rewardIndex =
+  const openCount =
     openedMappings.length;
 
   const rewardId =
     config.rewardSequence[
-      rewardIndex
+      openCount
     ];
 
   const reward =
@@ -318,30 +342,35 @@ function openBox(
 
   createSparkles();
 
-  setTimeout(() => {
+  setTimeout(
+    () => {
 
-    openedMappings.push({
-      position: position,
-      rewardId: rewardId
-    });
+      openedMappings.push({
+        position:
+          position,
+        rewardId:
+          rewardId
+      });
 
-    saveState();
+      saveState();
 
-    renderBoxes();
+      renderBoxes();
 
-    updateRemainingText();
+      updateStatusText();
 
-    showReward(
-      reward
-    );
+      showReward(
+        reward
+      );
 
-  }, 800);
+    },
+    800
+  );
 
 }
 
-// =====================
+// ======================
 // REWARD MODAL
-// =====================
+// ======================
 
 function showReward(
   reward
@@ -374,9 +403,9 @@ function showReward(
 
 }
 
-// =====================
-// SPARKLES
-// =====================
+// ======================
+// SPARKLE EFFECT
+// ======================
 
 function createSparkles() {
 
@@ -428,15 +457,18 @@ function createSparkles() {
 
 }
 
-// =====================
+// ======================
 // DEBUG
-// =====================
+// ======================
 
 window.resetLuckyBox =
   resetState;
 
-// =====================
+window.exportLuckyBox =
+  exportLuckyBox;
+
+// ======================
 // START
-// =====================
+// ======================
 
 loadConfig();
