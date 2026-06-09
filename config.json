@@ -1,7 +1,7 @@
 {
-  "openedBoxes": [],
-
   "maxOpenAllowed": 1,
+
+  "rewardSequence": [4, 2, 1, 3],
 
   "boxes": [
     {
