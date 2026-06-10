@@ -22,11 +22,28 @@
     ]
   },
 
-  "maxOpenAllowed": 1,
+  "maxOpenAllowed": 4,
 
   "rewardSequence": [1, 2, 3, 4],
 
-  "openedMappings": [],
+  "openedMappings": [
+    {
+      "position": 1,
+      "rewardId": 1
+    },
+    {
+      "position": 2,
+      "rewardId": 2
+    },
+    {
+      "position": 3,
+      "rewardId": 3
+    },
+    {
+      "position": 4,
+      "rewardId": 4
+    }
+  ],
 
   "boxes": [
     {
